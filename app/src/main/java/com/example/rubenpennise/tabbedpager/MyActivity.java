@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.Locale;
 
 
-public class MyActivity extends Activity {
+public class MyActivity extends FragmentActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -28,20 +35,23 @@ public class MyActivity extends Activity {
      * {@link android.support.v13.app.FragmentStatePagerAdapter}.
      */
     static SectionsPagerAdapter mSectionsPagerAdapter;
+    public static android.support.v4.app.FragmentManager fragmentManager;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
+
     ViewPager mViewPager;
     ListView lista;
     int linea=0;
+    int cuadras=5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
-
+        fragmentManager = getSupportFragmentManager();
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -69,12 +79,32 @@ public class MyActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            //android.support.v4.app.Fragment f = fragmentManager.findFragmentById(R.id.location_map);
+            Fragment f = getFragmentManager().findFragmentById(R.id.location_map);
+            if (f instanceof PlaceholderFragment){
+                ((PlaceholderFragment) f).cambiarTipoMapa();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    
+    /*
+    * metodo para cambiar de pagina desde la lista de las lineas disponibles
+    * **/
+    public void switchFragmentLinea(int target,int linea){
+        this.linea=linea;
+        mViewPager.setCurrentItem(target);
+    }
+
+    /*
+    * metodo para cambiar de pagina desde el fragment  buscar de las lineas disponibles
+    * **/
+    public void switchFragmentCuadras(int target,int cuadras){
+        this.cuadras=cuadras;
+        mViewPager.setCurrentItem(target);
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -123,6 +153,10 @@ public class MyActivity extends Activity {
             }
             return null;
         }
+
+
+
+
     }
 
     /**
@@ -134,6 +168,11 @@ public class MyActivity extends Activity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+
+        private MapFragment mMapFragment;
+        private static GoogleMap mMap;
+        int lineaColectivo=25;
+        private final LatLng PLANET_HOLLYWOOD = new LatLng(36.1100, -115.1710);
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -155,12 +194,58 @@ public class MyActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_my, container, false);
+
+            lineaColectivo= getArguments().getInt("linea");
+            Log.d("linea colectivo",lineaColectivo+"");
+            setUpMapIfNeeded();
+            agregarMarcador();
             return rootView;
         }
+
+        @Override
+        public void onDestroyView() {
+            super.onDestroyView();
+            if (mMap != null) {
+                MyActivity.fragmentManager.beginTransaction()
+                        .remove(MyActivity.fragmentManager.findFragmentById(R.id.location_map)).commit();
+                mMap = null;
+            }
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+        }
+
+        public static void setUpMapIfNeeded() {
+            // Do a null check to confirm that we have not already instantiated the map.
+            if (mMap == null) {
+                // Try to obtain the map from the SupportMapFragment.
+                mMap = ((SupportMapFragment) MyActivity.fragmentManager
+                        .findFragmentById(R.id.location_map)).getMap();
+                // Check if we were successful in obtaining the map.
+            }
+        }
+
+        private void agregarMarcador() {
+            if(mMap != null){
+                mMap.addMarker(new MarkerOptions().position(PLANET_HOLLYWOOD).title("Planet Hollywood"));
+            }
+        }
+
+        private void cambiarTipoMapa() {
+            if(mMap!=null) {
+                if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    Log.d("tipo mapa sat", mMap.getMapType() + "");
+                } else if (mMap.getMapType() == GoogleMap.MAP_TYPE_SATELLITE) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                }
+            }
+        }
+
     }
 
-    public static SectionsPagerAdapter getmSectionsPagerAdapter(){
-        return mSectionsPagerAdapter;
-    }
+
 
 }

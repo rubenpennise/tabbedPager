@@ -1,7 +1,6 @@
 package com.example.rubenpennise.tabbedpager;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -65,10 +64,7 @@ public class ListaFragment extends Fragment {
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.pager, MyActivity.PlaceholderFragment.newInstance(4,i))
-                        .commit();
+                ((MyActivity)getActivity()).switchFragmentLinea(1,i);
             }
         });
         return v;

@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 
 public class BuscarFragment extends Fragment {
@@ -19,6 +19,8 @@ public class BuscarFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    SeekBar cuadras;
+    TextView textViewSeekBar;
 
     /**
      * Use this factory method to create a new instance of
@@ -54,7 +56,12 @@ public class BuscarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_buscar, container, false);
+        View v= inflater.inflate(R.layout.fragment_buscar, container, false);
+        cuadras= (SeekBar)v.findViewById(R.id.seekBarCuadras);
+        cuadras.setProgress(5);
+        textViewSeekBar = (TextView) v.findViewById(R.id.textViewCuadras);
+        textViewSeekBar.setText("5 cuadras");
+        return v;
     }
 
 
