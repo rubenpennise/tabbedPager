@@ -3,6 +3,7 @@ package com.example.rubenpennise.tabbedpager;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,13 +58,25 @@ public class ListaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        String lineas[] = {"linea 1", "linea 2", "linea 3", "linea 4", "linea 5", "linea 6"};
+        Integer imagen_id[] = {R.drawable.colectivo, R.drawable.colectivo, R.drawable.colectivo,
+                R.drawable.colectivo, R.drawable.colectivo, R.drawable.colectivo};
+
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_lista, container, false);
 
         lista= (ListView) v.findViewById(R.id.listView);
+        CustomAdapter adapter = new CustomAdapter(((MyActivity)getActivity()), imagen_id, lineas);
+
+        lista.setAdapter(adapter);
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("on item click", i + "");
+                /*MyActivity.fragmentManager.beginTransaction()
+                        .remove(MyActivity.fragmentManager.findFragmentById(R.id.location_map)).commit();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.pager, MyActivity.PlaceholderFragment.newInstance(i, i)).commit();*/
                 ((MyActivity)getActivity()).switchFragmentLinea(1,i);
             }
         });

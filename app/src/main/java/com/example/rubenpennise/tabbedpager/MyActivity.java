@@ -15,12 +15,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.example.rubenpennise.tabbedpager.Lineas.Linea;
+import com.example.rubenpennise.tabbedpager.Lineas.LineaManager;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 
@@ -45,6 +50,7 @@ public class MyActivity extends FragmentActivity {
     ListView lista;
     int linea=0;
     int cuadras=5;
+    ArrayList<Linea> listaLineas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +67,6 @@ public class MyActivity extends FragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(1);
-
     }
 
 
@@ -79,11 +84,7 @@ public class MyActivity extends FragmentActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            //android.support.v4.app.Fragment f = fragmentManager.findFragmentById(R.id.location_map);
-            Fragment f = getFragmentManager().findFragmentById(R.id.location_map);
-            if (f instanceof PlaceholderFragment){
-                ((PlaceholderFragment) f).cambiarTipoMapa();
-            }
+            PlaceholderFragment.cambiarTipoMapa();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -94,7 +95,23 @@ public class MyActivity extends FragmentActivity {
     * **/
     public void switchFragmentLinea(int target,int linea){
         this.linea=linea;
-        mViewPager.setCurrentItem(target);
+        mViewPager.setCurrentItem(target);/*
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.remove(getFragmentManager().findFragmentById(R.layout.fragment_my))
+                .add(R.id.pager, MyActivity.PlaceholderFragment.newInstance(target, linea)).commit();
+        mSectionsPagerAdapter.notifyDataSetChanged();*/
+        //PlaceholderFragment.agregarMarcador();
+        //aca mostramos los distintos recorridos, hasta ahora tendria que ser con metodos estaticos.
+        switch(linea){
+            case 0:
+                listaLineas=new LineaManager().getListaLineas();
+                new PlaceholderFragment().mostrarRutas(listaLineas);
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
     }
 
     /*
@@ -172,8 +189,8 @@ public class MyActivity extends FragmentActivity {
         private MapFragment mMapFragment;
         private static GoogleMap mMap;
         int lineaColectivo=25;
-        private final LatLng PLANET_HOLLYWOOD = new LatLng(36.1100, -115.1710);
-
+        private  static final LatLng PLANET_HOLLYWOOD = new LatLng(36.1100, -115.1710);
+        private static Polyline polyline;
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -195,14 +212,14 @@ public class MyActivity extends FragmentActivity {
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_my, container, false);
 
-            lineaColectivo= getArguments().getInt("linea");
-            Log.d("linea colectivo",lineaColectivo+"");
+            Log.d("on create"," view");
             setUpMapIfNeeded();
-            agregarMarcador();
+            //agregarMarcador();
             return rootView;
+
         }
 
-        @Override
+       /* @Override
         public void onDestroyView() {
             super.onDestroyView();
             if (mMap != null) {
@@ -210,11 +227,21 @@ public class MyActivity extends FragmentActivity {
                         .remove(MyActivity.fragmentManager.findFragmentById(R.id.location_map)).commit();
                 mMap = null;
             }
-        }
+            Log.d("on destroy"," view");
+        }*/
 
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
+            lineaColectivo= getArguments().getInt("linea");
+            Log.d("linea colectivo on attach",((MyActivity)getActivity()).linea+"");
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            lineaColectivo= getArguments().getInt("linea");
+            Log.d("linea colectivo on resume",((MyActivity)getActivity()).linea+"");
         }
 
         public static void setUpMapIfNeeded() {
@@ -227,13 +254,13 @@ public class MyActivity extends FragmentActivity {
             }
         }
 
-        private void agregarMarcador() {
+        public static void agregarMarcador() {
             if(mMap != null){
                 mMap.addMarker(new MarkerOptions().position(PLANET_HOLLYWOOD).title("Planet Hollywood"));
             }
         }
 
-        private void cambiarTipoMapa() {
+        public static void cambiarTipoMapa() {
             if(mMap!=null) {
                 if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL) {
                     mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
@@ -242,6 +269,19 @@ public class MyActivity extends FragmentActivity {
                     mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 }
             }
+        }
+
+        public  void mostrarRutas(ArrayList<Linea> rutasAMostrar) {
+            for (Linea l : rutasAMostrar){
+                PolylineOptions polylineOptions = new PolylineOptions()
+                        .addAll(l.getListaPuntos());
+                drawPolilyne(polylineOptions);
+
+            }
+        }
+
+        public  void drawPolilyne(PolylineOptions options){
+            polyline = mMap.addPolyline(options);
         }
 
     }
