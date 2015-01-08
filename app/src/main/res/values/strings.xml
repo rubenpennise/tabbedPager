@@ -17,6 +17,7 @@
         <item>primero</item>
     </string-array>
 
-
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
