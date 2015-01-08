@@ -1,13 +1,14 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.rubenpennise.tabbedpager.BuscarFragment">
+    tools:context="com.example.rubenpennise.tabbedpager.BuscarFragment"
+    android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="50dp"
     android:orientation="horizontal">
 
     <TextView
@@ -25,4 +26,51 @@
         android:layout_height="wrap_content"
         />
 </LinearLayout>
-</FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextOrigen"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/stroke_color"/>
+
+        <Button
+            style="@style/button_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="origen"
+            android:id="@+id/buttonOrigen"
+            android:layout_weight="10"
+            android:background="@drawable/red_button"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextDestino"
+            android:layout_gravity="center_horizontal"/>
+
+        <Button
+            style="@style/button_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="destino"
+            android:id="@+id/buttonDestino"
+            android:layout_weight="10"
+            android:background="@drawable/red_button"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.example.rubenpennise.tabbedpager.Lineas.Linea;
 import com.example.rubenpennise.tabbedpager.Lineas.LineaManager;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -105,9 +106,13 @@ public class MyActivity extends FragmentActivity {
         switch(linea){
             case 0:
                 listaLineas=new LineaManager().getListaLineas();
-                new PlaceholderFragment().mostrarRutas(listaLineas);
+                Log.d("lista lineas",listaLineas.toString());
+                new PlaceholderFragment().mostrarRutas(listaLineas,"101");
                 break;
             case 1:
+                listaLineas=new LineaManager().getListaLineas();
+                Log.d("lista lineas",listaLineas.toString());
+                new PlaceholderFragment().mostrarRutas(listaLineas,"503");
                 break;
             case 2:
                 break;
@@ -190,7 +195,7 @@ public class MyActivity extends FragmentActivity {
         private static GoogleMap mMap;
         int lineaColectivo=25;
         private  static final LatLng PLANET_HOLLYWOOD = new LatLng(36.1100, -115.1710);
-        private static Polyline polyline;
+        private  Polyline polyline;
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -251,6 +256,9 @@ public class MyActivity extends FragmentActivity {
                 mMap = ((SupportMapFragment) MyActivity.fragmentManager
                         .findFragmentById(R.id.location_map)).getMap();
                 // Check if we were successful in obtaining the map.
+                LatLng catamarca = new LatLng(-28.461087, -65.787203);
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(catamarca, 13));
             }
         }
 
@@ -271,16 +279,19 @@ public class MyActivity extends FragmentActivity {
             }
         }
 
-        public  void mostrarRutas(ArrayList<Linea> rutasAMostrar) {
+        public  void mostrarRutas(ArrayList<Linea> rutasAMostrar,String linea) {
             for (Linea l : rutasAMostrar){
-                PolylineOptions polylineOptions = new PolylineOptions()
-                        .addAll(l.getListaPuntos());
-                drawPolilyne(polylineOptions);
-
+                if(l.getNombre().equals(linea)) {
+                    Log.d("entro",l.getNombre()+l.getListaPuntos().toString());
+                    PolylineOptions polylineOptions = new PolylineOptions()
+                            .addAll(l.getListaPuntos());
+                    drawPolilyne(polylineOptions);
+                }
             }
         }
 
         public  void drawPolilyne(PolylineOptions options){
+            mMap.clear();
             polyline = mMap.addPolyline(options);
         }
 

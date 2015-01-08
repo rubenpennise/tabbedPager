@@ -11,6 +11,7 @@ public class LineaManager {
 
     private ArrayList<LatLng> listaPuntos101 = new ArrayList<LatLng>();
     private ArrayList<Linea> listaLineas = new ArrayList<Linea>();
+    ArrayList<LatLng> listaPuntos503 = new ArrayList<LatLng>();
 
     public void crearLineas(){
 
@@ -71,7 +72,35 @@ public class LineaManager {
 
         listaLineas.add(linea101);
 
+        Linea linea503 =new Linea();
 
+        LatLng punto_23=new LatLng(-28.48211774040582,-65.79352458735365);
+        LatLng punto_24=new LatLng(-28.48204197331593,-65.79232096589863);
+        LatLng punto_25=new LatLng(-28.48199124221545,-65.7916462403378);
+        LatLng punto_26=new LatLng(-28.48189663631807,-65.79071598804423);
+        LatLng punto_27=new LatLng(-28.48190050646215,-65.78964135648468);
+        LatLng punto_28= new LatLng(-28.48202067799064,-65.78769470121114);
+        LatLng punto_29 =new LatLng(-28.48217106989901,-65.7858507787991);
+        LatLng punto_30 =new LatLng(-28.48236256696674,-65.78418627551402);
+        LatLng punto_31 =new LatLng(-28.48240250647536,-65.78243039010931);
+        LatLng punto_32 =new LatLng(-28.48250005785362,-65.78075308744761);
+        LatLng punto_33=new LatLng(-28.48444759458934,-65.78079478595809);
+        listaPuntos503.add(punto_23);
+        listaPuntos503.add(punto_24);
+        listaPuntos503.add(punto_25);
+        listaPuntos503.add(punto_26);
+        listaPuntos503.add(punto_27);
+        listaPuntos503.add(punto_28);
+        listaPuntos503.add(punto_29);
+        listaPuntos503.add(punto_30);
+        listaPuntos503.add(punto_31);
+        listaPuntos503.add(punto_32);
+        listaPuntos503.add(punto_33);
+        linea503.setId(2L);
+        linea503.setNombre("503");
+        linea503.setListaPuntos(listaPuntos503);
+
+        listaLineas.add(linea503);
 
 
     }
